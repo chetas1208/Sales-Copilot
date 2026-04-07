@@ -1,0 +1,522 @@
+# MEETSTREAM AI - COMPLETE ARCHITECTURE
+# Knowledge Gap Detection + Slack PM Integration
+
+================================================================================
+                         HIGH-LEVEL SYSTEM OVERVIEW
+================================================================================
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                                                                          │
+│                           USER EXPERIENCE LAYER                          │
+│                                                                          │
+│  ┌────────────────────────┐         ┌─────────────────────────────┐   │
+│  │   GOOGLE MEET          │         │   SLACK WORKSPACE           │   │
+│  │   - Live meeting       │         │   - PM Channel              │   │
+│  │   - Meetstream bot     │         │   - Thread notifications    │   │
+│  │   - Audio streaming    │         │   - PM responses            │   │
+│  └────────┬───────────────┘         └────────┬────────────────────┘   │
+│           │                                   │                         │
+│  ┌────────▼───────────────┐                  │                         │
+│  │ CHROME EXTENSION       │◄─────────────────┘                         │
+│  │ - Overlay UI           │  WebSocket + Slack                         │
+│  │ - Real-time insights   │  (PM responses)                            │
+│  │ - PM notifications     │                                            │
+│  └────────┬───────────────┘                                            │
+│           │ WebSocket                                                  │
+└───────────┼────────────────────────────────────────────────────────────┘
+            │
+            │ ws://localhost:8000/ws
+            │
+================================================================================
+                              BACKEND SERVICES
+================================================================================
+            │
+            ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│                     FASTAPI APPLICATION (main.py)                        │
+│                           Port 8000                                      │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │ WebSocket Endpoint: /ws                                            │ │
+│  │ - Connection management                                            │ │
+│  │ - Message routing                                                  │ │
+│  │ - Real-time broadcasting                                           │ │
+│  └──────────┬─────────────────────────────────────┬───────────────────┘ │
+│             │                                      │                     │
+│  ┌──────────▼─────────────┐         ┌─────────────▼─────────────────┐  │
+│  │ WebSocket Manager      │         │ Webhook Handler              │  │
+│  │ - send_insight()       │         │ - Meetstream transcripts     │  │
+│  │ - send_pm_response()   │         │ - AssemblyAI streaming       │  │
+│  │ - broadcast()          │         │ - Audio processing           │  │
+│  └──────────┬─────────────┘         └─────────────┬─────────────────┘  │
+│             │                                      │                     │
+│             └──────────────┬───────────────────────┘                     │
+│                            │                                             │
+│                 ┌──────────▼──────────┐                                 │
+│                 │ Agent Orchestrator  │                                 │
+│                 │ - Coordinates agents│                                 │
+│                 │ - Parallel exec     │                                 │
+│                 │ - Job management    │                                 │
+│                 └──────────┬──────────┘                                 │
+│                            │                                             │
+└────────────────────────────┼─────────────────────────────────────────────┘
+                             │
+                             ▼
+================================================================================
+                            AI AGENTS LAYER
+================================================================================
+                             │
+        ┌────────────────────┴────────────────────┐
+        │                                         │
+   ┌────▼─────┐                            ┌─────▼──────┐
+   │ EXISTING │                            │    NEW     │
+   │  AGENTS  │                            │   AGENTS   │
+   └────┬─────┘                            └─────┬──────┘
+        │                                        │
+        │                                        │
+┌───────┴────────────────────────┐      ┌────────┴─────────────────────────┐
+│                                │      │                                  │
+│  1. Research Agent             │      │  6. Knowledge Gap Agent (NEW!)   │
+│     - Web scraping             │      │     - Product question detect    │
+│     - Company analysis         │      │     - Criticality assessment     │
+│     - GPT-4o intelligence      │      │     - Urgency scoring (0-10)     │
+│     Status: ✅ Working         │      │     - Buying intent analysis     │
+│                                │      │     - Slack message formatting   │
+│  2. Social Intelligence        │      │     Status: ✅ Implemented       │
+│     - LinkedIn data            │      │                                  │
+│     - Network analysis         │      │     Triggers:                    │
+│     Status: ⚠️ Placeholder     │      │     - urgency >= 7/10            │
+│                                │      │     - criticality: high/critical │
+│  3. Review Analysis            │      │     - buying_intent: true        │
+│     - G2, Capterra             │      │                                  │
+│     - Sentiment analysis       │      └──────────────┬───────────────────┘
+│     Status: ⚠️ Placeholder     │                     │
+│                                │                     │ Critical gap?
+│  4. Conversation Agent         │                     │
+│     - Objection detection      │                     ▼
+│     - Question analysis        │      ┌──────────────────────────────────┐
+│     - Response suggestions     │      │ Slack Service (NEW!)             │
+│     Status: 🔧 Partial         │      │ - Format rich message            │
+│                                │      │ - Send to PM channel             │
+│  5. Strategy Agent             │      │ - Monitor thread (5s poll)       │
+│     - Synthesize insights      │      │ - Detect PM response             │
+│     - Battle cards             │      │ - Broadcast to WebSocket         │
+│     - Next steps               │      │ - Store in knowledge base        │
+│     Status: 🔧 Partial         │      │ Status: ✅ Implemented           │
+│                                │      │ Mode: Mock (no Slack creds)      │
+└────────────────────────────────┘      └──────────────┬───────────────────┘
+                                                       │
+                                                       ▼
+================================================================================
+                          EXTERNAL SERVICES
+================================================================================
+                                                       │
+                    ┌──────────────────────────────────┼──────────────┐
+                    │                                  │              │
+         ┌──────────▼──────────┐          ┌───────────▼────────┐     │
+         │ OpenAI GPT-4o       │          │ Slack API          │     │
+         │ - Agent analysis    │          │ - chat.postMessage │     │
+         │ - Criticality       │          │ - conversations.*  │     │
+         │ - Urgency scoring   │          │ - Block Kit msgs   │     │
+         │ Status: ⚠️ Key invalid│         │ Status: ⚠️ Not config│    │
+         └─────────────────────┘          └────────────────────┘     │
+                                                                      │
+         ┌─────────────────────┐          ┌────────────────────┐     │
+         │ ChromaDB            │          │ Meetstream API     │     │
+         │ - Vector storage    │          │ - Bot control      │     │
+         │ - Knowledge base    │          │ - Transcription    │     │
+         │ Status: ✅ Ready    │          │ Status: ✅ Ready   │     │
+         └─────────────────────┘          └────────────────────┘     │
+                                                                      │
+         ┌─────────────────────┐          ┌────────────────────┐     │
+         │ AssemblyAI          │          │ Playwright         │     │
+         │ - Real-time STT     │          │ - Web scraping     │     │
+         │ - Streaming         │          │ - BeautifulSoup    │     │
+         │ Status: ✅ Configured│          │ Status: ✅ Working │     │
+         └─────────────────────┘          └────────────────────┘     │
+                                                                      │
+                                                                      │
+================================================================================
+                         DATA FLOW: KNOWLEDGE GAP DETECTION
+================================================================================
+
+STEP 1: LIVE MEETING TRANSCRIPT
+┌──────────────────────────────────────────────────────────────────────────┐
+│ Google Meet → Meetstream Bot → Webhook → Backend                        │
+│                                                                          │
+│ Transcript: "Can your API handle 100k requests per minute?"             │
+│ Speaker: "prospect"                                                      │
+│ Timestamp: 2026-03-28T12:00:00Z                                         │
+└─────────────────────────────┬────────────────────────────────────────────┘
+                              │
+                              ▼
+STEP 2: AGENT ORCHESTRATOR
+┌──────────────────────────────────────────────────────────────────────────┐
+│ process_transcript(websocket, transcript, speaker)                      │
+│                                                                          │
+│ Store in conversation context                                           │
+│ Launch parallel agents:                                                 │
+│   ├─► Conversation Agent (objections, questions)                        │
+│   └─► Knowledge Gap Agent (product questions)                           │
+└─────────────────────────────┬────────────────────────────────────────────┘
+                              │
+                              ▼
+STEP 3: KNOWLEDGE GAP AGENT ANALYSIS
+┌──────────────────────────────────────────────────────────────────────────┐
+│ analyze_for_knowledge_gap()                                             │
+│                                                                          │
+│ 1. Is this from prospect? ✅ Yes                                        │
+│ 2. Is this about our product? ✅ Yes (API capacity)                     │
+│ 3. Check knowledge base... ❌ Not found                                 │
+│ 4. Call GPT-4o for assessment:                                          │
+│    {                                                                     │
+│      "is_product_question": true,                                       │
+│      "is_knowledge_gap": true,                                          │
+│      "criticality": "critical",                                         │
+│      "urgency_score": 9,                                                │
+│      "has_buying_intent": true,                                         │
+│      "question_category": "technical_capability",                       │
+│      "why_critical": "Performance req for enterprise deal",             │
+│      "suggested_answer": "Our Enterprise plan supports 500k..."         │
+│    }                                                                     │
+│                                                                          │
+│ 5. should_notify_pm() → TRUE (urgency 9 >= 7)                          │
+└─────────────────────────────┬────────────────────────────────────────────┘
+                              │ Critical gap detected
+                              ▼
+STEP 4: SLACK NOTIFICATION
+┌──────────────────────────────────────────────────────────────────────────┐
+│ format_slack_message() → Rich block message                             │
+│ slack_service.send_pm_alert()                                           │
+│                                                                          │
+│ ┌─────────────────────────────────────────────────────────────────┐    │
+│ │ 🔴 Knowledge Gap Detected                                       │    │
+│ │                                                                 │    │
+│ │ Company: Acme Corp          Urgency: 9/10 🔴                   │    │
+│ │ Category: Technical         Attendees: John (CTO)               │    │
+│ │                                                                 │    │
+│ │ Prospect's Question:                                           │    │
+│ │ > Can your API handle 100k requests per minute?                │    │
+│ │                                                                 │    │
+│ │ Why This Is Critical:                                          │    │
+│ │ Performance requirement for enterprise deal evaluation         │    │
+│ │                                                                 │    │
+│ │ AI-Suggested Response:                                         │    │
+│ │ Our Enterprise plan supports 500k requests/min with 99.99% SLA│    │
+│ │                                                                 │    │
+│ │ [Join Meeting] button                                          │    │
+│ └─────────────────────────────────────────────────────────────────┘    │
+│                                                                          │
+│ Response: { "thread_ts": "1711627200.123456", "success": true }        │
+│                                                                          │
+│ Start background thread monitoring...                                   │
+└─────────────────────────────┬────────────────────────────────────────────┘
+                              │ Message sent
+                              ▼
+STEP 5: NOTIFY SALES REP
+┌──────────────────────────────────────────────────────────────────────────┐
+│ websocket_manager.send_insight()                                        │
+│                                                                          │
+│ Type: "knowledge_gap"                                                   │
+│ Title: "PM Team Notified"                                               │
+│ Content: "The PM team has been notified about: 'Can your API...'"      │
+│ Priority: "high"                                                        │
+│                                                                          │
+│ → Broadcast to Chrome Extension                                         │
+│ → Sales rep sees notification in overlay                                │
+└──────────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+STEP 6: PM RESPONDS IN SLACK
+┌──────────────────────────────────────────────────────────────────────────┐
+│ PM types in thread:                                                     │
+│ "Yes confirmed! Enterprise plan handles 500k req/min. We also have     │
+│  auto-scaling to 2M. Share this benchmark doc: [link]"                 │
+└─────────────────────────────┬────────────────────────────────────────────┘
+                              │ (5-second polling detects reply)
+                              ▼
+STEP 7: MONITOR DETECTS RESPONSE
+┌──────────────────────────────────────────────────────────────────────────┐
+│ _monitor_thread() → polls Slack every 5 seconds                        │
+│ _check_thread_replies() → finds new message                            │
+│                                                                          │
+│ PM Response:                                                            │
+│ {                                                                        │
+│   "text": "Yes confirmed! Enterprise plan handles 500k...",            │
+│   "user": "U01234567",                                                  │
+│   "timestamp": "1711627320.123457"                                      │
+│ }                                                                        │
+│                                                                          │
+│ Update thread status: "waiting_for_pm" → "answered"                    │
+└─────────────────────────────┬────────────────────────────────────────────┘
+                              │ Response detected
+                              ▼
+STEP 8: BROADCAST TO SALES REP
+┌──────────────────────────────────────────────────────────────────────────┐
+│ websocket_manager.broadcast()                                           │
+│                                                                          │
+│ {                                                                        │
+│   "type": "pm_response_received",                                       │
+│   "data": {                                                              │
+│     "original_question": "Can your API handle 100k...",                 │
+│     "response_text": "Yes confirmed! Enterprise plan...",               │
+│     "pm_user": "U01234567",                                             │
+│     "timestamp": "2026-03-28T12:05:00Z"                                 │
+│   }                                                                      │
+│ }                                                                        │
+│                                                                          │
+│ → Chrome Extension receives message                                     │
+│ → Shows PM response in overlay                                          │
+│ → Sales rep reads answer to prospect                                    │
+└─────────────────────────────┬────────────────────────────────────────────┘
+                              │
+                              ▼
+STEP 9: STORE IN KNOWLEDGE BASE (TODO)
+┌──────────────────────────────────────────────────────────────────────────┐
+│ _store_in_knowledge_base()                                              │
+│                                                                          │
+│ Store Q&A pair in ChromaDB:                                             │
+│ Q: "Can your API handle 100k requests per minute?"                     │
+│ A: "Yes, Enterprise plan supports 500k req/min..."                     │
+│ Category: "technical_capability"                                        │
+│ Confidence: 1.0 (from PM)                                               │
+│                                                                          │
+│ → Future meetings: Auto-answer from knowledge base                      │
+│ → No PM alert needed for same question                                  │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+================================================================================
+                         KEY DECISION POINTS
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ DECISION: Should PM be notified?                                       │
+│                                                                         │
+│ Input: Knowledge gap analysis result                                   │
+│                                                                         │
+│ IF criticality IN ['high', 'critical']                                 │
+│    → NOTIFY                                                             │
+│                                                                         │
+│ OR IF urgency_score >= 7                                               │
+│    → NOTIFY                                                             │
+│                                                                         │
+│ OR IF recommended_action IN ['notify_pm', 'escalate_urgent']          │
+│    → NOTIFY                                                             │
+│                                                                         │
+│ ELSE                                                                    │
+│    → DON'T NOTIFY (just show AI suggestion to sales rep)               │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ CRITICALITY ASSESSMENT (by GPT-4o)                                     │
+│                                                                         │
+│ Analyzes:                                                               │
+│ 1. Question about our product? (vs general chat)                       │
+│ 2. Does sales rep have this info? (knowledge base check)               │
+│ 3. Buying intent signals?                                               │
+│    - "evaluating between you and X"                                     │
+│    - "we need this for..."                                              │
+│    - "can you support..."                                               │
+│    - "during contracting/pricing discussion"                            │
+│ 4. Is this time-sensitive?                                              │
+│    - Deal in progress                                                   │
+│    - Technical evaluation                                               │
+│    - Competitor comparison                                              │
+│                                                                         │
+│ Output:                                                                 │
+│ - criticality: none/low/moderate/high/critical                         │
+│ - urgency_score: 0-10                                                   │
+│ - has_buying_intent: true/false                                         │
+│ - why_critical: explanation                                             │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+================================================================================
+                         CONFIGURATION SUMMARY
+================================================================================
+
+Environment Variables (.env)
+────────────────────────────────────────────────────────────────────────────
+OPENAI_API_KEY                 Status: ⚠️ Invalid (needs update)
+SLACK_BOT_TOKEN                Status: ❌ Not configured
+SLACK_SIGNING_SECRET           Status: ❌ Not configured
+SLACK_PM_CHANNEL_ID            Status: ❌ Not configured
+MEETSTREAM_API_KEY             Status: ✅ Configured
+ASSEMBLYAI_API_KEY             Status: ✅ Configured
+
+
+Agent Configuration
+────────────────────────────────────────────────────────────────────────────
+MAX_CONCURRENT_AGENTS          5 (can run 5 agents in parallel)
+AGENT_TIMEOUT_SECONDS          30 (agent execution timeout)
+
+
+Slack Service Modes
+────────────────────────────────────────────────────────────────────────────
+Mode 1: LIVE                   Credentials configured → Sends real messages
+Mode 2: MOCK (current)         No credentials → Logs to console
+
+
+Urgency Thresholds (Adjustable)
+────────────────────────────────────────────────────────────────────────────
+PM Alert Trigger:              urgency >= 7/10 OR criticality high/critical
+Thread Monitor Duration:       30 minutes max
+Poll Interval:                 5 seconds
+
+
+================================================================================
+                         TESTING SCENARIOS
+================================================================================
+
+Scenario 1: CRITICAL QUESTION → PM ALERT
+────────────────────────────────────────────────────────────────────────────
+Input:     "Can you integrate with SAP ERP using our custom middleware?"
+Speaker:   prospect
+Context:   During technical evaluation, competitor comparison
+
+Analysis:
+  ✓ is_product_question: true
+  ✓ is_knowledge_gap: true
+  ✓ criticality: critical
+  ✓ urgency_score: 9/10
+  ✓ has_buying_intent: true
+
+Action:
+  → PM notified via Slack
+  → Sales rep sees "PM Team Notified"
+  → Waits for PM response
+
+
+Scenario 2: NON-CRITICAL QUESTION → AI SUGGESTION ONLY
+────────────────────────────────────────────────────────────────────────────
+Input:     "What industries do you typically work with?"
+Speaker:   prospect
+Context:   General conversation
+
+Analysis:
+  ✓ is_product_question: false
+  ✓ is_knowledge_gap: false
+  ✓ criticality: none
+  ✓ urgency_score: 2/10
+  ✓ has_buying_intent: false
+
+Action:
+  → No PM alert
+  → Sales rep sees AI suggestion
+  → No Slack message
+
+
+Scenario 3: SALES REP SPEAKING → IGNORED
+────────────────────────────────────────────────────────────────────────────
+Input:     "Let me show you how our API works..."
+Speaker:   sales rep
+Context:   Demo
+
+Analysis:
+  → Skipped (agent only analyzes prospect statements)
+
+Action:
+  → No processing
+  → No PM alert
+
+
+================================================================================
+                         FILE STRUCTURE
+================================================================================
+
+meetstream-ai/
+├── backend/
+│   ├── agents/
+│   │   ├── research_agent.py              [Existing] ✅
+│   │   ├── social_intelligence_agent.py   [Existing] ⚠️
+│   │   ├── review_analysis_agent.py       [Existing] ⚠️
+│   │   ├── conversation_agent.py          [Existing] 🔧
+│   │   ├── strategy_agent.py              [Existing] 🔧
+│   │   └── knowledge_gap_agent.py         [NEW!] ✅ 460 lines
+│   │
+│   ├── services/
+│   │   ├── agent_orchestrator.py          [Modified] ✅ +150 lines
+│   │   ├── websocket_manager.py           [Modified] ✅ +60 lines
+│   │   ├── openai_client.py               [Existing] ✅
+│   │   ├── meetstream_service.py          [Existing] ✅
+│   │   ├── transcript_storage.py          [Existing] ✅
+│   │   └── slack_service.py               [NEW!] ✅ 380 lines
+│   │
+│   ├── mcp_servers/
+│   │   ├── web_scraper_mcp/               [Existing] ✅
+│   │   └── company_intelligence_mcp/      [Existing] ✅
+│   │
+│   ├── main.py                            [Existing] ✅
+│   ├── requirements.txt                   [Modified] ✅ +slack-sdk
+│   ├── .env                               [Existing] ⚠️ needs OpenAI key
+│   └── .env.example                       [Modified] ✅ +Slack vars
+│
+├── SLACK_PM_INTEGRATION_README.md         [NEW!] ✅ 800+ lines
+├── IMPLEMENTATION_SUMMARY.md              [NEW!] ✅ 500+ lines
+├── ARCHITECTURE_DIAGRAM.txt               [NEW!] ✅ This file
+├── test_knowledge_gap_integration.py      [NEW!] ✅ 310 lines
+│
+└── frontend/                              [Existing - no changes needed]
+
+
+================================================================================
+                         QUICK REFERENCE
+================================================================================
+
+Health Check:
+────────────────────────────────────────────────────────────────────────────
+curl http://localhost:8000/health
+→ Should show "knowledge_gap" in loaded_agents
+
+
+Test Web Scraping:
+────────────────────────────────────────────────────────────────────────────
+curl -X POST http://localhost:8000/api/intelligence/scrape \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://stripe.com"}'
+
+
+Test Mock Slack:
+────────────────────────────────────────────────────────────────────────────
+cd /Users/jeetshah/Documents/Meetstream AI
+python3 test_knowledge_gap_integration.py
+(Requires valid OpenAI API key)
+
+
+Server Logs:
+────────────────────────────────────────────────────────────────────────────
+tail -f /tmp/backend_test.log
+
+
+Restart Backend:
+────────────────────────────────────────────────────────────────────────────
+lsof -ti:8000 | xargs kill -9
+cd backend && python3 -m uvicorn main:app --reload
+
+
+================================================================================
+                         STATUS SUMMARY
+================================================================================
+
+✅ COMPLETE
+  - Knowledge Gap Agent implemented
+  - Slack Service integrated
+  - Agent Orchestrator updated
+  - WebSocket message types added
+  - Documentation written
+  - Test suite created
+  - Server running with new agents
+
+⚠️ NEEDS CONFIGURATION
+  - OpenAI API key (current key invalid)
+  - Slack credentials (for live testing)
+
+🔮 READY FOR FUTURE
+  - ChromaDB knowledge base
+  - PM response storage
+  - Analytics dashboard
+  - Multi-language support
+
+================================================================================

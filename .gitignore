@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Node modules (if we add Node.js later)
+node_modules/
+
+# Claude artifacts
+.claude/
+
+# Backend (when we create it later)
+backend/__pycache__/
+backend/*.pyc
+
+# Secrets and API keys
+secrets/
+*.pem
+*.key
+credentials.json
+
+# Temporary documentation files (exploration notes)
+README_EXPLORATION.txt
+ARCHITECTURE_VISUAL.txt
+FINAL_WEBHOOK_URL.txt
+WEBHOOK_URL_FOR_MEETSTREAM.txt
+MEETSTREAM_BOT_CONFIG.json
+START_BOT_COMMAND.sh
+test_*.py
+demo_*.py

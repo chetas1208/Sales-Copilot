@@ -1,0 +1,6 @@
+/* SalesStream Overlook - Global Styles */
+/* Most styles are in Shadow DOM for isolation */
+
+#salesstream-overlay-container {
+  /* Container styles are inline in content.js */
+}

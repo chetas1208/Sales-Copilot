@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 300px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    h2 {
+      margin: 0 0 10px 0;
+      font-size: 20px;
+    }
+
+    p {
+      margin: 0 0 15px 0;
+      font-size: 14px;
+      line-height: 1.5;
+      opacity: 0.95;
+    }
+
+    .status {
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 13px;
+    }
+
+    .indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .instructions {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .instructions strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .input-section {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      margin-top: 10px;
+    }
+
+    input[type="url"],
+    textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 12px;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .primary-btn {
+      width: 100%;
+      padding: 10px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #667eea;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .primary-btn:hover {
+      background: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .primary-btn:active {
+      transform: translateY(0);
+    }
+
+    .status-message {
+      margin-top: 10px;
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .status-message.success {
+      background: rgba(74, 222, 128, 0.2);
+      border: 1px solid rgba(74, 222, 128, 0.4);
+    }
+
+    .status-message.error {
+      background: rgba(248, 113, 113, 0.2);
+      border: 1px solid rgba(248, 113, 113, 0.4);
+    }
+
+    .status-message.info {
+      background: rgba(96, 165, 250, 0.2);
+      border: 1px solid rgba(96, 165, 250, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <h2>SalesStream Overlook</h2>
+  <p>Real-time AI sales assistant for Google Meet</p>
+
+  <div class="status">
+    <span class="indicator"></span>
+    Extension Active
+  </div>
+
+  <div class="instructions">
+    <strong>How to use:</strong>
+    1. Enter company website below<br>
+    2. Join a Google Meet call<br>
+    3. The overlay will show AI insights!
+  </div>
+
+  <div class="input-section">
+    <label for="myCompanyUrl">Your Company Website:</label>
+    <input type="url" id="myCompanyUrl" placeholder="https://yourcompany.com" />
+
+    <label for="targetCompanyUrl">Target Company (Prospect):</label>
+    <input type="url" id="targetCompanyUrl" placeholder="https://prospectcompany.com" />
+
+    <button id="startResearch" class="primary-btn">Start Research</button>
+
+    <div id="statusMessage" class="status-message" style="display: none;"></div>
+  </div>
+
+  <div class="input-section" style="margin-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 15px;">
+    <label style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Meetstream Bot Control:</label>
+    <button id="startBot" class="primary-btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
+      Start Recording Bot
+    </button>
+    <div id="botStatusMessage" class="status-message" style="display: none;"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

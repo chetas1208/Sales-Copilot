@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcript Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4ade80;
+        }
+        .button {
+            background: #4ade80;
+            color: #1a1a1a;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background: #22c55e;
+        }
+        .status {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            background: #2a2a2a;
+        }
+        .status.connected {
+            border-left: 4px solid #4ade80;
+        }
+        .status.disconnected {
+            border-left: 4px solid #f87171;
+        }
+        .transcript-box {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            min-height: 200px;
+        }
+        .transcript-line {
+            padding: 10px;
+            margin: 5px 0;
+            background: #3a3a3a;
+            border-radius: 6px;
+            border-left: 3px solid #4ade80;
+        }
+        .timestamp {
+            color: #888;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        .speaker {
+            color: #60a5fa;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .instructions {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #f59e0b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ Live Transcription Test Page</h1>
+
+        <div class="instructions">
+            <h3>📋 Instructions:</h3>
+            <ol>
+                <li>Click "Connect to Backend" below</li>
+                <li>Click "Send Test Transcripts"</li>
+                <li>Transcripts will appear in the box below</li>
+                <li>This simulates what you'll see in the Chrome Extension</li>
+            </ol>
+        </div>
+
+        <div>
+            <button class="button" onclick="connectWebSocket()">Connect to Backend</button>
+            <button class="button" onclick="sendTestTranscripts()">Send Test Transcripts</button>
+            <button class="button" onclick="clearTranscripts()">Clear Transcripts</button>
+        </div>
+
+        <div id="status" class="status disconnected">
+            <strong>Status:</strong> <span id="status-text">Not connected</span>
+        </div>
+
+        <h2>Transcripts:</h2>
+        <div id="transcript-box" class="transcript-box">
+            <p style="color: #888; font-style: italic;">Waiting for transcripts...</p>
+        </div>
+
+        <div class="instructions">
+            <h3>🔍 What This Shows:</h3>
+            <p>This page demonstrates how transcripts will appear in your Chrome Extension overlay when real meetings happen.</p>
+            <p><strong>Backend:</strong> http://localhost:8000</p>
+            <p><strong>WebSocket:</strong> ws://localhost:8000/ws</p>
+            <p><strong>Webhook:</strong> https://signe-untextual-cyrus.ngrok-free.dev/webhook</p>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+
+        function updateStatus(connected, message) {
+            const statusDiv = document.getElementById('status');
+            const statusText = document.getElementById('status-text');
+
+            if (connected) {
+                statusDiv.className = 'status connected';
+                statusText.textContent = message || 'Connected to Backend';
+            } else {
+                statusDiv.className = 'status disconnected';
+                statusText.textContent = message || 'Disconnected';
+            }
+        }
+
+        function connectWebSocket() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                alert('Already connected!');
+                return;
+            }
+
+            updateStatus(false, 'Connecting...');
+
+            ws = new WebSocket('ws://localhost:8000/ws');
+
+            ws.onopen = () => {
+                console.log('✅ Connected to backend');
+                updateStatus(true, 'Connected to Backend');
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const message = JSON.parse(event.data);
+                    console.log('Received:', message);
+
+                    if (message.type === 'live_transcript') {
+                        addTranscript(message);
+                    } else if (message.type === 'connection_established') {
+                        console.log('Connection ID:', message.connection_id);
+                    }
+                } catch (e) {
+                    console.error('Error parsing message:', e);
+                }
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                updateStatus(false, 'Connection error');
+            };
+
+            ws.onclose = () => {
+                console.log('❌ Disconnected');
+                updateStatus(false, 'Disconnected');
+            };
+        }
+
+        function addTranscript(data) {
+            const box = document.getElementById('transcript-box');
+
+            // Remove placeholder
+            if (box.querySelector('p[style*="italic"]')) {
+                box.innerHTML = '';
+            }
+
+            const line = document.createElement('div');
+            line.className = 'transcript-line';
+
+            const time = new Date(data.timestamp);
+            const timeStr = time.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            line.innerHTML = `
+                <span class="timestamp">${timeStr}</span>
+                <span class="speaker">${data.speaker || 'Unknown'}:</span>
+                <span>${data.transcript || data.new_text}</span>
+            `;
+
+            box.appendChild(line);
+
+            // Auto-scroll
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function sendTestTranscripts() {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                alert('Please connect to backend first!');
+                return;
+            }
+
+            alert('Sending test transcripts via webhook...');
+
+            // Send test transcripts via HTTP (simulating Meetstream)
+            const transcripts = [
+                {
+                    bot_id: 'test-123',
+                    speakerName: 'Jeet Shah',
+                    timestamp: new Date().toISOString(),
+                    new_text: 'Hello everyone, welcome to the meeting',
+                    transcript: 'Hello everyone, welcome to the meeting',
+                    end_of_turn: true
+                },
+                {
+                    bot_id: 'test-123',
+                    speakerName: 'Client',
+                    timestamp: new Date(Date.now() + 2000).toISOString(),
+                    new_text: 'Hi Jeet, good to see you',
+                    transcript: 'Hi Jeet, good to see you',
+                    end_of_turn: true
+                },
+                {
+                    bot_id: 'test-123',
+                    speakerName: 'Jeet Shah',
+                    timestamp: new Date(Date.now() + 4000).toISOString(),
+                    new_text: "Let's discuss your requirements",
+                    transcript: "Let's discuss your requirements",
+                    end_of_turn: true
+                }
+            ];
+
+            transcripts.forEach((transcript, index) => {
+                setTimeout(() => {
+                    fetch('https://signe-untextual-cyrus.ngrok-free.dev/webhook', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(transcript)
+                    }).then(() => {
+                        console.log(`Sent transcript ${index + 1}`);
+                    }).catch(err => {
+                        console.error('Error sending transcript:', err);
+                    });
+                }, index * 2000);
+            });
+        }
+
+        function clearTranscripts() {
+            document.getElementById('transcript-box').innerHTML = '<p style="color: #888; font-style: italic;">Waiting for transcripts...</p>';
+        }
+    </script>
+</body>
+</html>

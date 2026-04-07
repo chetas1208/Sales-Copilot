@@ -1,0 +1,376 @@
+{
+  "company": "TechCorp Enterprise Solutions",
+  "products": [
+    {
+      "id": "cloudops-suite",
+      "name": "CloudOps Suite",
+      "description": "Complete cloud infrastructure management platform with AI-powered optimization, monitoring, and cost management capabilities.",
+      "modules": [
+        {
+          "id": "cloudops-monitor",
+          "name": "Cloud Monitor Pro",
+          "description": "Real-time infrastructure monitoring with predictive alerts, custom dashboards, and 99.99% uptime SLA. Includes anomaly detection, performance analytics, and automated incident response.",
+          "features": [
+            "Real-time metrics tracking across multi-cloud environments",
+            "AI-powered anomaly detection with predictive alerts",
+            "Custom dashboards with 500+ pre-built templates",
+            "Auto-scaling recommendations based on usage patterns",
+            "Integration with 50+ monitoring tools (Datadog, New Relic, etc.)",
+            "24/7 intelligent alerting with noise reduction"
+          ],
+          "licenses": [
+            {
+              "tier": "Starter",
+              "price": "$299/month",
+              "limits": "Up to 50 servers, 10 users, 30-day data retention",
+              "support": "Email support (48hr response)"
+            },
+            {
+              "tier": "Professional",
+              "price": "$899/month",
+              "limits": "Up to 500 servers, 50 users, 90-day data retention",
+              "support": "Priority email + chat support (12hr response)",
+              "extras": "Advanced analytics, custom integrations"
+            },
+            {
+              "tier": "Enterprise",
+              "price": "$2,499/month",
+              "limits": "Unlimited servers, unlimited users, 2-year data retention",
+              "support": "24/7 phone + dedicated success manager",
+              "extras": "White-label options, on-premise deployment, custom SLA"
+            }
+          ]
+        },
+        {
+          "id": "cloudops-optimize",
+          "name": "Cost Optimizer AI",
+          "description": "AI-driven cloud cost optimization that automatically identifies savings opportunities, rightsizes resources, and eliminates waste. Average 35% cost reduction in first 90 days.",
+          "features": [
+            "Automated resource rightsizing with zero-downtime migrations",
+            "Reserved instance and savings plan recommendations",
+            "Waste detection for idle resources and orphaned storage",
+            "Multi-cloud cost comparison (AWS, Azure, GCP)",
+            "Budget alerts and forecasting with ML models",
+            "Automated shutdown of non-production resources"
+          ],
+          "licenses": [
+            {
+              "tier": "Pay-as-you-save",
+              "price": "15% of savings",
+              "limits": "Unlimited cloud spend visibility",
+              "support": "Email support"
+            },
+            {
+              "tier": "Business",
+              "price": "$599/month + 10% of savings",
+              "limits": "Advanced automation, unlimited users",
+              "support": "Priority support with quarterly reviews",
+              "extras": "Custom policies, FinOps consulting"
+            },
+            {
+              "tier": "Enterprise",
+              "price": "Custom pricing",
+              "limits": "Full automation suite, dedicated instance",
+              "support": "24/7 dedicated FinOps team",
+              "extras": "API access, custom integrations, on-premise option"
+            }
+          ]
+        },
+        {
+          "id": "cloudops-security",
+          "name": "Security Command Center",
+          "description": "Comprehensive cloud security platform with compliance monitoring, vulnerability scanning, and automated remediation. SOC2, ISO27001, HIPAA certified.",
+          "features": [
+            "Continuous compliance monitoring (SOC2, GDPR, HIPAA, PCI-DSS)",
+            "Automated vulnerability scanning and patching",
+            "Real-time threat detection with AI-powered analysis",
+            "Identity and access management (IAM) audit trails",
+            "Encryption key management and rotation",
+            "Security posture scoring and recommendations"
+          ],
+          "licenses": [
+            {
+              "tier": "Standard",
+              "price": "$799/month",
+              "limits": "Up to 100 resources, basic compliance frameworks",
+              "support": "Email support"
+            },
+            {
+              "tier": "Advanced",
+              "price": "$1,999/month",
+              "limits": "Up to 1000 resources, all compliance frameworks",
+              "support": "24/7 security hotline",
+              "extras": "Penetration testing, security training"
+            },
+            {
+              "tier": "Enterprise",
+              "price": "$4,999/month",
+              "limits": "Unlimited resources, custom compliance policies",
+              "support": "Dedicated security analyst team",
+              "extras": "Custom threat intelligence, incident response team"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dataflow-platform",
+      "name": "DataFlow Analytics Platform",
+      "description": "Enterprise data pipeline and analytics platform with real-time processing, ML model deployment, and self-service BI tools.",
+      "modules": [
+        {
+          "id": "dataflow-pipelines",
+          "name": "Data Pipeline Builder",
+          "description": "Visual ETL/ELT builder with 300+ connectors, real-time streaming, and automated data quality checks. Process billions of events per day.",
+          "features": [
+            "Drag-and-drop pipeline designer with 300+ connectors",
+            "Real-time and batch processing capabilities",
+            "Automated data quality validation and cleansing",
+            "Built-in CDC (Change Data Capture) support",
+            "Version control and pipeline testing framework",
+            "Auto-scaling based on data volume"
+          ],
+          "licenses": [
+            {
+              "tier": "Developer",
+              "price": "$199/month",
+              "limits": "Up to 1TB data processing/month, 10 pipelines",
+              "support": "Community support"
+            },
+            {
+              "tier": "Professional",
+              "price": "$999/month",
+              "limits": "Up to 10TB data processing/month, 100 pipelines",
+              "support": "Email + chat support",
+              "extras": "Advanced transformations, CI/CD integration"
+            },
+            {
+              "tier": "Enterprise",
+              "price": "$3,999/month",
+              "limits": "Unlimited data processing, unlimited pipelines",
+              "support": "24/7 priority support + data engineering team",
+              "extras": "Custom connectors, on-premise deployment, white-label"
+            }
+          ]
+        },
+        {
+          "id": "dataflow-ml",
+          "name": "ML Model Hub",
+          "description": "End-to-end MLOps platform for training, deploying, and monitoring ML models at scale. AutoML capabilities with pre-built models.",
+          "features": [
+            "AutoML for automated model training and tuning",
+            "50+ pre-trained models (NLP, vision, forecasting)",
+            "Model versioning and A/B testing framework",
+            "Real-time and batch inference APIs",
+            "Model monitoring and drift detection",
+            "GPU/TPU acceleration support"
+          ],
+          "licenses": [
+            {
+              "tier": "Starter",
+              "price": "$499/month",
+              "limits": "Up to 10 models, 100K predictions/month",
+              "support": "Email support"
+            },
+            {
+              "tier": "Professional",
+              "price": "$1,499/month",
+              "limits": "Up to 100 models, 10M predictions/month",
+              "support": "Priority support with ML consultations",
+              "extras": "Custom model development, feature store"
+            },
+            {
+              "tier": "Enterprise",
+              "price": "$5,999/month",
+              "limits": "Unlimited models, unlimited predictions",
+              "support": "Dedicated ML engineering team",
+              "extras": "On-premise deployment, custom algorithms, GPU clusters"
+            }
+          ]
+        },
+        {
+          "id": "dataflow-bi",
+          "name": "Business Intelligence Studio",
+          "description": "Self-service BI tool with natural language queries, interactive dashboards, and AI-powered insights. Embed analytics anywhere.",
+          "features": [
+            "Natural language querying (ask questions in plain English)",
+            "Drag-and-drop dashboard builder with 100+ chart types",
+            "AI-powered insight recommendations",
+            "Embedded analytics SDK for applications",
+            "Scheduled reports and alerts",
+            "Mobile-responsive dashboards"
+          ],
+          "licenses": [
+            {
+              "tier": "Team",
+              "price": "$99/user/month",
+              "limits": "Up to 25 users, 50 dashboards",
+              "support": "Email support"
+            },
+            {
+              "tier": "Business",
+              "price": "$199/user/month",
+              "limits": "Up to 500 users, unlimited dashboards",
+              "support": "Priority support",
+              "extras": "White-label embedding, custom branding"
+            },
+            {
+              "tier": "Enterprise",
+              "price": "Custom pricing",
+              "limits": "Unlimited users, unlimited dashboards",
+              "support": "24/7 dedicated support + BI consultants",
+              "extras": "On-premise, custom visualizations, data governance"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "collaboration-hub",
+      "name": "Collaboration Hub",
+      "description": "Unified communication and collaboration platform with video conferencing, project management, and AI meeting assistant.",
+      "modules": [
+        {
+          "id": "collab-meet",
+          "name": "Meet Pro",
+          "description": "Enterprise video conferencing with AI transcription, real-time translation, and smart meeting summaries. Supports up to 1000 participants.",
+          "features": [
+            "HD video conferencing up to 1000 participants",
+            "AI-powered real-time transcription and translation (50+ languages)",
+            "Automated meeting summaries and action items",
+            "Screen sharing with annotation tools",
+            "Recording and cloud storage",
+            "Calendar integration and scheduling assistant"
+          ],
+          "licenses": [
+            {
+              "tier": "Basic",
+              "price": "$15/user/month",
+              "limits": "Up to 100 participants, 40-min meetings",
+              "support": "Email support"
+            },
+            {
+              "tier": "Professional",
+              "price": "$29/user/month",
+              "limits": "Up to 500 participants, unlimited meeting duration",
+              "support": "Priority support",
+              "extras": "Advanced AI features, custom branding"
+            },
+            {
+              "tier": "Enterprise",
+              "price": "$49/user/month",
+              "limits": "Up to 1000 participants, dedicated infrastructure",
+              "support": "24/7 support + dedicated success manager",
+              "extras": "On-premise option, API access, compliance certifications"
+            }
+          ]
+        },
+        {
+          "id": "collab-workspace",
+          "name": "Workspace Manager",
+          "description": "Integrated project management and team collaboration platform with AI task automation and resource planning.",
+          "features": [
+            "Kanban, Gantt, and timeline views for projects",
+            "AI-powered task prioritization and deadline suggestions",
+            "Resource allocation and capacity planning",
+            "Time tracking and reporting",
+            "Document collaboration with version control",
+            "Integration with 100+ tools (Jira, GitHub, Slack, etc.)"
+          ],
+          "licenses": [
+            {
+              "tier": "Team",
+              "price": "$12/user/month",
+              "limits": "Up to 50 users, 10 projects",
+              "support": "Email support"
+            },
+            {
+              "tier": "Business",
+              "price": "$24/user/month",
+              "limits": "Up to 500 users, unlimited projects",
+              "support": "Priority support with onboarding",
+              "extras": "Advanced automation, custom workflows"
+            },
+            {
+              "tier": "Enterprise",
+              "price": "$39/user/month",
+              "limits": "Unlimited users, unlimited projects",
+              "support": "24/7 support + dedicated CSM",
+              "extras": "On-premise, custom integrations, advanced security"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "common_questions": [
+    {
+      "question": "What's included in the CloudOps Suite?",
+      "answer": "CloudOps Suite includes three powerful modules: Cloud Monitor Pro for real-time infrastructure monitoring, Cost Optimizer AI for automated cost savings (avg 35% reduction), and Security Command Center for compliance and threat detection. You can purchase modules individually or as a bundled suite for additional savings."
+    },
+    {
+      "question": "Can I try before buying?",
+      "answer": "Absolutely! We offer a 14-day free trial for all products with full feature access. No credit card required. After the trial, you can choose the tier that fits your needs or speak with our sales team about custom enterprise solutions."
+    },
+    {
+      "question": "Do you offer enterprise discounts?",
+      "answer": "Yes! Enterprise customers purchasing multiple modules or exceeding 100 users typically receive 15-30% volume discounts. We also offer custom pricing for multi-year commitments. Contact our sales team for a personalized quote."
+    },
+    {
+      "question": "What's the difference between cloud and on-premise deployment?",
+      "answer": "Our cloud deployment is fully managed, scales automatically, and includes all updates. On-premise deployment (available in Enterprise tiers) gives you complete control, meets strict compliance requirements, and can run in air-gapped environments. Both options include the same features."
+    },
+    {
+      "question": "How does the Cost Optimizer AI pricing work?",
+      "answer": "We offer a unique Pay-as-you-save model at 15% of identified savings, so you only pay when you save money. For customers wanting more advanced automation and dedicated support, our Business and Enterprise tiers offer fixed pricing plus a percentage of savings."
+    },
+    {
+      "question": "Can I upgrade or downgrade my license?",
+      "answer": "Yes, you can change your license tier at any time. Upgrades take effect immediately. Downgrades take effect at the next billing cycle. There are no penalties for changing tiers."
+    },
+    {
+      "question": "What integrations are available?",
+      "answer": "We integrate with 500+ tools including AWS, Azure, GCP, Datadog, Slack, Microsoft Teams, Jira, GitHub, Salesforce, and more. Enterprise customers can also build custom integrations using our REST APIs and webhooks."
+    },
+    {
+      "question": "What kind of support do you provide?",
+      "answer": "Support varies by tier: Starter plans include email support, Professional plans add priority chat support, and Enterprise plans include 24/7 phone support with dedicated account managers and success teams. All plans include access to our documentation and community forums."
+    },
+    {
+      "question": "Is there a setup fee?",
+      "answer": "No setup fees for cloud deployments. On-premise Enterprise deployments may include implementation services depending on complexity. We'll provide a detailed quote during the sales process."
+    },
+    {
+      "question": "How do I get started?",
+      "answer": "You can start a free trial immediately at techcorp.com/trial or schedule a personalized demo with our team. For enterprise customers, we recommend a discovery call to understand your specific needs and provide a customized solution."
+    }
+  ],
+  "pricing_bundles": [
+    {
+      "name": "Complete CloudOps Bundle",
+      "description": "All three CloudOps Suite modules at 20% discount",
+      "includes": ["Cloud Monitor Pro", "Cost Optimizer AI", "Security Command Center"],
+      "pricing": {
+        "Professional": "$3,199/month (save $640)",
+        "Enterprise": "$7,999/month (save $1,600)"
+      }
+    },
+    {
+      "name": "DataFlow Complete",
+      "description": "Full data platform with pipelines, ML, and BI",
+      "includes": ["Data Pipeline Builder", "ML Model Hub", "Business Intelligence Studio"],
+      "pricing": {
+        "Professional": "$2,999/month (save $600)",
+        "Enterprise": "$8,999/month (save $1,800)"
+      }
+    },
+    {
+      "name": "Enterprise Everything",
+      "description": "All products and modules with maximum features",
+      "includes": ["All CloudOps modules", "All DataFlow modules", "All Collaboration modules"],
+      "pricing": {
+        "Enterprise": "$19,999/month (save $5,000+)"
+      }
+    }
+  ]
+}
